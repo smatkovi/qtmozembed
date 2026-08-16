@@ -1,0 +1,13 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib64
+includedir=${prefix}/lib64
+
+
+Name: qt5embedwidget
+Description: Model that emits process info
+Version: 1.56.0
+Libs: -lqt5embedwidget-next 
+Cflags: -I${includedir}
+Requires: libxul
+

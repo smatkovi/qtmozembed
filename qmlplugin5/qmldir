@@ -1,2 +1,2 @@
-module Qt5Mozilla
+module Qt5MozillaNext
 plugin qmlmozembedpluginqt5

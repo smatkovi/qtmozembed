@@ -1,4 +1,4 @@
-MODULENAME = Qt5Mozilla
+MODULENAME = Qt5MozillaNext
 TARGET  = qmlmozembedpluginqt5
 
 TEMPLATE = lib
