@@ -11,7 +11,7 @@ RELATIVE_PATH=..
 VDEPTH_PATH=qmlplugin5
 include($$RELATIVE_PATH/relative-objdir.pri)
 
-LIBS+= -L$$RELATIVE_PATH/$$OBJ_BUILD_PATH/src -lqt5embedwidget
+LIBS+= -L$$RELATIVE_PATH/$$OBJ_BUILD_PATH/src -lqt5embedwidget-next
 QTMOZEMBED_SOURCE_PATH = $$PWD/$$RELATIVE_PATH/src
 INCLUDEPATH += $$QTMOZEMBED_SOURCE_PATH
 

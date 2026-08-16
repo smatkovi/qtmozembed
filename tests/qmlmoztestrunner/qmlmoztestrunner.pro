@@ -15,7 +15,7 @@ include($$RELATIVE_PATH/relative-objdir.pri)
 PKGCONFIG += libxul
 
 INCLUDEPATH+=$$RELATIVE_PATH/src
-LIBS+= -L$$RELATIVE_PATH/$$OBJ_BUILD_PATH/src -lqt5embedwidget -lsystemsettings
+LIBS+= -L$$RELATIVE_PATH/$$OBJ_BUILD_PATH/src -lqt5embedwidget-next -lsystemsettings
 
 isEmpty(DEFAULT_COMPONENT_PATH) {
   DEFINES += DEFAULT_COMPONENTS_PATH=\"\\\"$$[QT_INSTALL_LIBS]/mozembedlite/\\\"\"
