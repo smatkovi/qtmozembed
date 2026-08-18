@@ -18,6 +18,7 @@
 
 #include <dlfcn.h>
 #include <link.h>
+#include "mozilla/embedlite/EmbedLiteAPI.h"
 
 #include "qmessagepump.h"
 #include "qmozembedlog.h"

@@ -117,6 +117,9 @@ void QuickMozView::SetIsActive(bool aIsActive)
     } else {
         Q_EMIT setIsActive(aIsActive);
     }
+    if (aIsActive && d->mMozWindow) {
+        d->mMozWindow->resumeRendering();
+    }
 }
 
 void QuickMozView::processViewInitialization()

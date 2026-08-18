@@ -89,7 +89,7 @@ Qt::ScreenOrientation QMozWindow::primaryOrientation() const
 
 void QMozWindow::getPlatformImage(const std::function<void(void *image, int width, int height)> &callback)
 {
-    d->mWindow->GetPlatformImage(callback);
+    d->mWindow->WithPlatformImage([&callback](const mozilla::embedlite::PlatformImageDescriptor &desc) { callback(desc.handle, desc.width, desc.height); });
 }
 
 void QMozWindow::clearPlatformImage()

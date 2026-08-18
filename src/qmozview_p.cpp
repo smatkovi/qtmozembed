@@ -1022,6 +1022,9 @@ void QMozViewPrivate::ViewInitialized()
     }
 
     // This is currently part of official API, so let's subscribe to these messages by default
+    if (mMozWindow) {
+        mMozWindow->resumeRendering();
+    }
     mViewIface->viewInitialized();
     mViewIface->canGoBackChanged();
     mViewIface->canGoForwardChanged();
