@@ -158,6 +158,10 @@ void QMozOpenGLWebPage::setActive(bool active)
     if (d->mActive != active) {
         d->mActive = active;
         d->mView->SetIsActive(d->mActive);
+        if (d->mActive && d->mMozWindow) {
+            qWarning("EL-wake: page resume");
+            d->mMozWindow->resumeRendering();
+        }
         Q_EMIT activeChanged();
     }
 }
