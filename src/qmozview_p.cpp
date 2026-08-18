@@ -832,6 +832,14 @@ void QMozViewPrivate::setMozWindow(QMozWindow *window)
 {
     mMozWindow = window;
     if (mMozWindow) {
+        QObject::connect(mMozWindow.data(), &QMozWindow::compositingFinished, this, [this]() {
+            if (!mIsPainted) {
+                qWarning("EL-synthFP: first composite -> synthesize firstPaint");
+                OnFirstPaint(0, 0);
+            }
+        });
+    }
+    if (mMozWindow) {
         if (mSize.isEmpty() && !mMozWindow->size().isEmpty()) {
             mSize = mMozWindow->size();
             if (!mViewInitialized) {
