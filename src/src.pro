@@ -1,6 +1,6 @@
 CONFIG += qt thread debug ordered create_pc create_prl no_install_prl c++1z
 QT += openglextensions
-TARGET = qt5embedwidget-next
+TARGET = qt5embedwidget-next153
 TEMPLATE = lib
 
 # Avoid X11 header collision

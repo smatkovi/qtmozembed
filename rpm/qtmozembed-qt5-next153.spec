@@ -3,7 +3,7 @@
 %define system_nspr       1
 %define system_pixman     1
 
-Name:       qtmozembed-qt5-next
+Name:       qtmozembed-qt5-next153
 Summary:    Qt embeddings for Gecko
 Version:    1.56.0
 Release:    1
@@ -23,13 +23,13 @@ BuildRequires:  pkgconfig(nspr) >= 4.13.1
 %if %{system_pixman}
 BuildRequires:  pkgconfig(pixman-1) >= 0.19.2
 %endif
-BuildRequires:  xulrunner-qt5-next-devel >= %{min_xulrunner_version}
+BuildRequires:  xulrunner-qt5-next153-devel >= %{min_xulrunner_version}
 BuildRequires:  qt5-default
 BuildRequires:  qt5-qttools
 BuildRequires:  pkgconfig(systemsettings) >= 0.5.25
-Requires:       xulrunner-qt5-next >= %{min_xulrunner_version}
+Requires:       xulrunner-qt5-next153 >= %{min_xulrunner_version}
 Requires:       nemo-qml-plugin-systemsettings >= 0.5.25
-Requires:       embedlite-components-qt5-next >= 2.0.0
+Requires:       embedlite-components-qt5-next153 >= 2.0.0
 
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
@@ -64,7 +64,7 @@ CONFIGURE_VARIABLE=""
   CONFIGURE_VARIABLE="with-system-nspr"
 %endif
 
-%qmake5 -r VERSION=%{version} CONFIG+=${CONFIGURE_VARIABLE} DEFAULT_COMPONENT_PATH=%{_libdir}/mozembedlite-next/
+%qmake5 -r VERSION=%{version} CONFIG+=${CONFIGURE_VARIABLE} DEFAULT_COMPONENT_PATH=%{_libdir}/mozembedlite-next153/
 %make_build
 
 %install

@@ -1,5 +1,5 @@
 QMAKE_PRL_BUILD_DIR = /home/mersdk/share/esr115/qtmozembed/src
 QMAKE_PRO_INPUT = src.pro
-QMAKE_PRL_TARGET = libqt5embedwidget-next.so.1.56.0
+QMAKE_PRL_TARGET = libqt5embedwidget-next153.so.1.56.0
 QMAKE_PRL_CONFIG = lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin file_copies qt warn_on link_prl incremental shared qpa no_mocdepend qt_no_framework linux unix posix gcc with-system-nspr qt thread debug ordered create_pc create_prl no_install_prl c++1z link_pkgconfig egl have_target dll debug_info opengl moc resources
 QMAKE_PRL_VERSION = 1.56.0
