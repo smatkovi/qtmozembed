@@ -1,4 +1,6 @@
-CONFIG += qt thread debug ordered create_pc create_prl no_install_prl c++1z
+# Gecko 153 headers need C++20 (was CONFIG += c++1z).
+QMAKE_CXXFLAGS += -std=gnu++20
+CONFIG += qt thread debug ordered create_pc create_prl no_install_prl
 QT += openglextensions
 TARGET = qt5embedwidget-next153
 TEMPLATE = lib

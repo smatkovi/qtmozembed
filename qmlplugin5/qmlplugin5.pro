@@ -1,8 +1,10 @@
+# Gecko 153 headers need C++20 (was CONFIG += c++1z).
+QMAKE_CXXFLAGS += -std=gnu++20
 MODULENAME = Qt5MozillaNext
 TARGET  = qmlmozembedpluginqt5
 
 TEMPLATE = lib
-CONFIG += qt plugin c++1z
+CONFIG += qt plugin
 QT += qml quick
 
 SOURCES += main.cpp
