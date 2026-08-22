@@ -24,7 +24,10 @@
 #include <QtGui/QOpenGLContext>
 #include <QSGSimpleRectNode>
 #include <QSGSimpleTextureNode>
-#include <QtOpenGLExtensions>
+#include <QOpenGLContext>
+#include <QOpenGLShaderProgram>
+#include <QRunnable>
+#include <QScreen>
 #include <QQmlInfo>
 
 #include "qmozview_p.h"

@@ -43,7 +43,11 @@
 #include <QGuiApplication>
 #include <QtCore/qstring.h>
 #include <QTimer>
-#include <QtQml>
+#include <QtQml/qqml.h>
+#include <QQmlEngine>
+#include <QJSEngine>
+#include <QGuiApplication>
+#include <QQuickView>
 #include <QQuickView>
 #include <QtQuickTest/quicktest.h>
 

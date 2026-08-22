@@ -14,7 +14,8 @@
 #include <QGuiApplication>
 #include <QJsonDocument>
 #include <QJsonParseError>
-#include <QtQml/QtQml>
+#include <QtQml/qqml.h>
+#include <QJSValue>
 
 #include <dlfcn.h>
 #include <link.h>
