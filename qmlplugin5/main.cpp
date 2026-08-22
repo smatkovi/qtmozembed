@@ -29,16 +29,16 @@ class QtMozEmbedPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("Qt5MozillaNext"));
-        qmlRegisterType<QuickMozView>("Qt5MozillaNext", 1, 0, "QmlMozView");
-        qmlRegisterSingletonType<QMozContext>("Qt5MozillaNext", 1, 0, "QmlMozContext",
+        Q_ASSERT(uri == QLatin1String("Qt5MozillaNext153"));
+        qmlRegisterType<QuickMozView>("Qt5MozillaNext153", 1, 0, "QmlMozView");
+        qmlRegisterSingletonType<QMozContext>("Qt5MozillaNext153", 1, 0, "QmlMozContext",
                                               singletonApiFactory<QMozContext>);
-        qmlRegisterSingletonType<QMozEngineSettings>("Qt5MozillaNext", 1, 0, "QMozEngineSettings",
+        qmlRegisterSingletonType<QMozEngineSettings>("Qt5MozillaNext153", 1, 0, "QMozEngineSettings",
                                               singletonApiFactory<QMozEngineSettings>);
 
-        qmlRegisterUncreatableType<QMozScrollDecorator>("Qt5MozillaNext", 1, 0, "QmlMozScrollDecorator", "");
-        qmlRegisterUncreatableType<QMozReturnValue>("Qt5MozillaNext", 1, 0, "QMozReturnValue", "");
-        qmlRegisterType<QMozSecurity>("Qt5MozillaNext", 1, 0, "QMozSecurity");
+        qmlRegisterUncreatableType<QMozScrollDecorator>("Qt5MozillaNext153", 1, 0, "QmlMozScrollDecorator", "");
+        qmlRegisterUncreatableType<QMozReturnValue>("Qt5MozillaNext153", 1, 0, "QMozReturnValue", "");
+        qmlRegisterType<QMozSecurity>("Qt5MozillaNext153", 1, 0, "QMozSecurity");
         setenv("EMBED_COMPONENTS_PATH", DEFAULT_COMPONENTS_PATH, 1);
     }
 };

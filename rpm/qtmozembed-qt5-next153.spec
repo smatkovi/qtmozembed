@@ -76,7 +76,7 @@ CONFIGURE_VARIABLE=""
 %files
 %license LICENSE.txt
 %{_libdir}/*.so.*
-%{_libdir}/qt5/qml/Qt5MozillaNext/*
+%{_libdir}/qt5/qml/Qt5MozillaNext153/*
 
 %files devel
 %{_libdir}/*.so

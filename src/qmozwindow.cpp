@@ -89,7 +89,11 @@ Qt::ScreenOrientation QMozWindow::primaryOrientation() const
 
 void QMozWindow::getPlatformImage(const std::function<void(void *image, int width, int height)> &callback)
 {
-    d->mWindow->GetPlatformImage(callback);
+    // ESR 153 EmbedLite only offers the synchronous descriptor form; the handle is
+    // borrowed for the duration of the callback, so the consumer must import it there.
+    d->mWindow->WithPlatformImage([&callback](const mozilla::embedlite::PlatformImageDescriptor &desc) {
+        callback(desc.handle, desc.width, desc.height);
+    });
 }
 
 void QMozWindow::clearPlatformImage()
