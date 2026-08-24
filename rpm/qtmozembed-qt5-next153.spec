@@ -6,7 +6,7 @@
 Name:       qtmozembed-qt5-next153
 Summary:    Qt embeddings for Gecko
 Version:    1.56.0
-Release:    1
+Release:    2
 License:    MPLv2.0
 URL:        https://github.com/sailfishos/qtmozembed/
 Source0:    %{name}-%{version}.tar.bz2
