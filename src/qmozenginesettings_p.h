@@ -33,6 +33,8 @@ public:
     void setAutoLoadImages(bool enabled);
 
     bool javascriptEnabled() const;
+    void setAutoplayEnabled(bool enabled);
+    bool autoplayEnabled() const;
     void setJavascriptEnabled(bool enabled);
 
     bool popupEnabled() const;
@@ -80,6 +82,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void autoLoadImagesChanged();
     void javascriptEnabledChanged();
+    void autoplayEnabledChanged();
     void popupEnabledChanged();
     void cookieBehaviorChanged();
     void useDownloadDirChanged();
@@ -94,6 +97,7 @@ private:
     QMap<QString, QVariant> mPreferences;
     bool mInitialized;
     bool mJavascriptEnabled;
+    bool mAutoplayEnabled;
     bool mPopupEnabled;
     QMozEngineSettings::CookieBehavior mCookieBehavior;
     bool mUseDownloadDir;

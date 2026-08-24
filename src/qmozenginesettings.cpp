@@ -27,6 +27,7 @@ const auto NS_PREF_CHANGED = QStringLiteral("embed:nsPrefChanged");
 
 const auto PREF_PERMISSIONS_DEFAULT_IMAGE = QStringLiteral("permissions.default.image");
 const auto PREF_JAVASCRIPT_ENABLED = QStringLiteral("javascript.enabled");
+const auto PREF_AUTOPLAY_DEFAULT = QStringLiteral("media.autoplay.default");
 const auto PREF_POPUP_DISABLE_DURING_LOAD = QStringLiteral("dom.disable_open_during_load");
 const auto PREF_COOKIE_BEHAVIOR = QStringLiteral("network.cookie.cookieBehavior");
 const auto PREF_USE_DOWNLOAD_DIR = QStringLiteral("browser.download.useDownloadDir");
@@ -38,6 +39,7 @@ const auto PREF_COLOR_MODE =  QStringLiteral("ui.systemUsesDarkTheme");
 const QStringList PREF_CHANGED_OBSERVERS = {
     PREF_PERMISSIONS_DEFAULT_IMAGE,
     PREF_JAVASCRIPT_ENABLED,
+    PREF_AUTOPLAY_DEFAULT,
     PREF_POPUP_DISABLE_DURING_LOAD,
     PREF_COOKIE_BEHAVIOR,
     PREF_USE_DOWNLOAD_DIR,
@@ -57,6 +59,7 @@ QMozEngineSettingsPrivate::QMozEngineSettingsPrivate(QObject *parent)
     : QObject(parent)
     , mInitialized(false)
     , mJavascriptEnabled(true)
+    , mAutoplayEnabled(false)
     , mPopupEnabled(false)
     , mCookieBehavior(QMozEngineSettings::AcceptAll)
     , mUseDownloadDir(false)
@@ -107,6 +110,21 @@ void QMozEngineSettingsPrivate::setJavascriptEnabled(bool enabled)
         setPreference(QStringLiteral("javascript.enabled"), QVariant::fromValue<bool>(enabled));
         mJavascriptEnabled = enabled;
         Q_EMIT javascriptEnabledChanged();
+    }
+}
+
+bool QMozEngineSettingsPrivate::autoplayEnabled() const
+{
+    return mAutoplayEnabled;
+}
+
+void QMozEngineSettingsPrivate::setAutoplayEnabled(bool enabled)
+{
+    if (mAutoplayEnabled != enabled) {
+        // 0 laesst alles zu, 1 blockiert hoerbares Autoplay (Firefox-Standard).
+        setPreference(PREF_AUTOPLAY_DEFAULT, QVariant::fromValue<int>(enabled ? 0 : 1));
+        mAutoplayEnabled = enabled;
+        Q_EMIT autoplayEnabledChanged();
     }
 }
 
@@ -311,6 +329,12 @@ void QMozEngineSettingsPrivate::onObserve(const QString &topic, const QVariant &
                     mAutoLoadImages = imageLoadingAllowed;
                     Q_EMIT autoLoadImagesChanged();
                 }
+            } else if (changedPreference == PREF_AUTOPLAY_DEFAULT) {
+                bool allowed = preferenceValue.toInt() == 0;
+                if (mAutoplayEnabled != allowed) {
+                    mAutoplayEnabled = allowed;
+                    Q_EMIT autoplayEnabledChanged();
+                }
             } else if (changedPreference == PREF_JAVASCRIPT_ENABLED) {
                 bool jsEnabled = preferenceValue.toBool();
                 if (mJavascriptEnabled != jsEnabled) {
@@ -434,6 +458,7 @@ QMozEngineSettings::QMozEngineSettings(QObject *parent)
     connect(d, &QMozEngineSettingsPrivate::downloadDirChanged, this, &QMozEngineSettings::downloadDirChanged);
     connect(d, &QMozEngineSettingsPrivate::pixelRatioChanged, this, &QMozEngineSettings::pixelRatioChanged);
     connect(d, &QMozEngineSettingsPrivate::doNotTrackChanged, this, &QMozEngineSettings::doNotTrackChanged);
+    connect(d, &QMozEngineSettingsPrivate::autoplayEnabledChanged, this, &QMozEngineSettings::autoplayEnabledChanged);
     connect(d, &QMozEngineSettingsPrivate::colorSchemeChanged, this, &QMozEngineSettings::colorSchemeChanged);
 }
 
@@ -470,6 +495,18 @@ void QMozEngineSettings::setJavascriptEnabled(bool enabled)
 {
     Q_D(QMozEngineSettings);
     return d->setJavascriptEnabled(enabled);
+}
+
+bool QMozEngineSettings::autoplayEnabled() const
+{
+    Q_D(const QMozEngineSettings);
+    return d->autoplayEnabled();
+}
+
+void QMozEngineSettings::setAutoplayEnabled(bool enabled)
+{
+    Q_D(QMozEngineSettings);
+    return d->setAutoplayEnabled(enabled);
 }
 
 bool QMozEngineSettings::popupEnabled() const

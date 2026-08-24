@@ -23,6 +23,7 @@ class QMozEngineSettings : public QObject
     Q_PROPERTY(bool initialized READ isInitialized NOTIFY initialized)
     Q_PROPERTY(bool autoLoadImages READ autoLoadImages WRITE setAutoLoadImages NOTIFY autoLoadImagesChanged FINAL)
     Q_PROPERTY(bool javascriptEnabled READ javascriptEnabled WRITE setJavascriptEnabled NOTIFY javascriptEnabledChanged FINAL)
+    Q_PROPERTY(bool autoplayEnabled READ autoplayEnabled WRITE setAutoplayEnabled NOTIFY autoplayEnabledChanged FINAL)
     Q_PROPERTY(bool popupEnabled READ popupEnabled WRITE setPopupEnabled NOTIFY popupEnabledChanged)
     Q_PROPERTY(CookieBehavior cookieBehavior READ cookieBehavior WRITE setCookieBehavior NOTIFY cookieBehaviorChanged)
     Q_PROPERTY(bool useDownloadDir READ useDownloadDir WRITE setUseDownloadDir NOTIFY useDownloadDirChanged)
@@ -71,7 +72,9 @@ public:
     void setAutoLoadImages(bool enabled);
 
     bool javascriptEnabled() const;
+    bool autoplayEnabled() const;
     void setJavascriptEnabled(bool enabled);
+    void setAutoplayEnabled(bool enabled);
 
     bool popupEnabled() const;
     void setPopupEnabled(bool enabled);
@@ -106,6 +109,7 @@ public:
 Q_SIGNALS:
     void autoLoadImagesChanged();
     void javascriptEnabledChanged();
+    void autoplayEnabledChanged();
     void popupEnabledChanged();
     void cookieBehaviorChanged();
     void useDownloadDirChanged();
