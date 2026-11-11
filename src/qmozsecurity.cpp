@@ -13,11 +13,11 @@
 #include <nsIX509Cert.h>
 #include <mozilla/embedlite/EmbedLiteApp.h>
 #include <mozilla/embedlite/EmbedLiteSecurity.h>
-#include <systemsettings/certificatemodel.h>
 
 #include "qmozembedlog.h"
 #include "qmozcontext.h"
 #include "qmozsecurity.h"
+#include <QCryptographicHash>
 
 // Ensure the enum values in QMozSecurity match the enum values in nsISSLStatus
 static_assert((uint16_t)QMozSecurity::SSL_VERSION_3 == (uint16_t)nsITransportSecurityInfo::SSL_VERSION_3, "SSL/TLS version numbering mismatch: SSL_VERSION_3");
@@ -365,13 +365,19 @@ const QDateTime QMozSecurity::expiryDate() const
 
 QVariantMap QMozSecurity::serverCertDetails() const
 {
-    QList<Certificate> certList = CertificateModel::getCertificates(m_serverCertificate.toPem());
-
-    if (certList.isEmpty()) {
-        return QVariantMap();
+    // Without Sailfish's CertificateModel: the main fields from QSslCertificate.
+    QVariantMap details;
+    if (m_serverCertificate.isNull()) {
+        return details;
     }
-
-    return certList.first().details();
+    details.insert(QStringLiteral("SubjectDisplayName"), subjectDisplayName());
+    details.insert(QStringLiteral("IssuerDisplayName"), issuerDisplayName());
+    details.insert(QStringLiteral("SerialNumber"), QString::fromLatin1(m_serverCertificate.serialNumber()));
+    details.insert(QStringLiteral("NotValidBefore"), m_serverCertificate.effectiveDate());
+    details.insert(QStringLiteral("NotValidAfter"), m_serverCertificate.expiryDate());
+    details.insert(QStringLiteral("Sha256Fingerprint"),
+                   QString::fromLatin1(m_serverCertificate.digest(QCryptographicHash::Sha256).toHex(':')));
+    return details;
 }
 
 bool QMozSecurity::certIsNull() const

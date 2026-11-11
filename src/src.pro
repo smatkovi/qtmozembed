@@ -63,7 +63,7 @@ include($$RELATIVE_PATH/relative-objdir.pri)
 
 PREFIX = /usr
 
-QT += quick qml
+QT += quick qml network
 
 #DEFINES += Q_DEBUG_LOG
 
