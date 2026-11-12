@@ -117,6 +117,31 @@ bool QMozExtTexture::updateTexture()
             glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(m_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(m_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            // QMOZEMBED_DUMP=DIR: what this texture holds after binding, read
+            // back through a framebuffer, every 10th image (DIR/qt_N.ppm).
+            static const QByteArray dumpDir = qgetenv("QMOZEMBED_DUMP");
+            static int dumpCount = 0;
+            if (!dumpDir.isEmpty() && m_target == GL_TEXTURE_2D && dumpCount++ % 10 == 0) {
+                GLint oldFb = 0;
+                glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFb);
+                GLuint fb = 0;
+                glGenFramebuffers(1, &fb);
+                glBindFramebuffer(GL_FRAMEBUFFER, fb);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureId, 0);
+                QByteArray pixels(width * height * 4, 0);
+                glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+                glBindFramebuffer(GL_FRAMEBUFFER, oldFb);
+                glDeleteFramebuffers(1, &fb);
+                const QString path = QString::fromLocal8Bit(dumpDir) + QStringLiteral("/qt_%1.ppm").arg(dumpCount / 10 % 8);
+                if (FILE *f = fopen(path.toLocal8Bit().constData(), "wb")) {
+                    fprintf(f, "P6\n%d %d\n255\n", width, height);
+                    for (int i = 0; i < width * height; ++i) {
+                        fwrite(pixels.constData() + i * 4, 1, 3, f);
+                    }
+                    fclose(f);
+                    qDebug() << "QMozExtTexture: dumped" << path << "image" << image;
+                }
+            }
             if (debugTexture()) {
                 const GLenum error = glGetError();
                 qDebug() << "QMozExtTexture: image" << image << width << "x" << height
