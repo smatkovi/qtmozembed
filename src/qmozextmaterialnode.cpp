@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "qmozextmaterialnode.h"
+#include "qmozexttexture.h"
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -391,10 +392,63 @@ QSGMaterialType *MozExtTextureMaterial::type() const
     return &type;
 }
 
+class MozOpaque2DTextureMaterialShader : public MozOpaqueExtTextureMaterialShader
+{
+protected:
+    const char *fragmentShader() const override
+    {
+        return  "uniform lowp sampler2D texture;                                    \n"
+                "varying highp vec2 vTexCoord;                                      \n"
+                "void main() {                                                      \n"
+                "    gl_FragColor = texture2D(texture, vTexCoord);                  \n"
+                "}";
+    }
+};
+
+class Moz2DTextureMaterialShader : public MozExtTextureMaterialShader
+{
+protected:
+    const char *fragmentShader() const override
+    {
+        return  "uniform lowp float qt_Opacity;                                     \n"
+                "uniform lowp sampler2D texture;                                    \n"
+                "varying highp vec2 vTexCoord;                                      \n"
+                "void main() {                                                      \n"
+                "    gl_FragColor = qt_Opacity * texture2D(texture, vTexCoord);     \n"
+                "}";
+    }
+};
+
+QSGMaterialShader *MozOpaque2DTextureMaterial::createShader() const
+{
+    return new MozOpaque2DTextureMaterialShader;
+}
+
+QSGMaterialType *MozOpaque2DTextureMaterial::type() const
+{
+    static QSGMaterialType type;
+
+    return &type;
+}
+
+QSGMaterialShader *Moz2DTextureMaterial::createShader() const
+{
+    return new Moz2DTextureMaterialShader;
+}
+
+QSGMaterialType *Moz2DTextureMaterial::type() const
+{
+    static QSGMaterialType type;
+
+    return &type;
+}
+
 MozExtMaterialNode::MozExtMaterialNode()
 {
     m_opaqueMaterial.setFlag(QSGMaterial::Blending, false);
     m_material.setFlag(QSGMaterial::Blending, true);
+    m_opaque2DMaterial.setFlag(QSGMaterial::Blending, false);
+    m_2DMaterial.setFlag(QSGMaterial::Blending, true);
 
     setOpaqueMaterial(&m_opaqueMaterial);
     setMaterial(&m_material);
@@ -410,6 +464,24 @@ void MozExtMaterialNode::setTexture(QSGTexture *texture)
 
     m_opaqueMaterial.setTexture(texture);
     m_material.setTexture(texture);
+    m_opaque2DMaterial.setTexture(texture);
+    m_2DMaterial.setTexture(texture);
+}
+
+void MozExtMaterialNode::preprocess()
+{
+    MozMaterialNode::preprocess();
+
+    // Sample with the sampler type the image's texture target needs.
+    if (QMozExtTexture *texture = qobject_cast<QMozExtTexture *>(this->texture())) {
+        const bool is2D = texture->target() == GL_TEXTURE_2D;
+        if (is2D != m_is2D) {
+            m_is2D = is2D;
+            setOpaqueMaterial(is2D ? static_cast<QSGMaterial *>(&m_opaque2DMaterial) : &m_opaqueMaterial);
+            setMaterial(is2D ? static_cast<QSGMaterial *>(&m_2DMaterial) : &m_material);
+            markDirty(QSGNode::DirtyMaterial);
+        }
+    }
 }
 
 #endif

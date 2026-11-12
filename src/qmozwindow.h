@@ -34,7 +34,7 @@ public:
     Qt::ScreenOrientation contentOrientation() const;
     Qt::ScreenOrientation pendingOrientation() const;
     Qt::ScreenOrientation primaryOrientation() const;
-    void getPlatformImage(const std::function<void(void *image, int width, int height)> &callback);
+    void getPlatformImage(const std::function<void(void *image, int width, int height, unsigned target)> &callback);
     void clearPlatformImage();
     void suspendRendering();
     void resumeRendering();

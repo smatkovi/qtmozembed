@@ -12,6 +12,7 @@
 #include <QVariant>
 #include <QThread>
 #include <QGuiApplication>
+#include <qpa/qplatformnativeinterface.h>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QtQml/qqml.h>
@@ -440,6 +441,14 @@ void QMozContext::runEmbedding(int aDelay)
 {
     if (!d->mEmbedStarted) {
         d->mEmbedStarted = true;
+        // Gecko renders on Qt's EGLDisplay, so that the EGLImages it hands over
+        // (QMozExtTexture) are valid in Qt's contexts: an image of another
+        // display is refused (GL_INVALID_OPERATION on Mesa).
+        if (QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface()) {
+            if (void *display = native->nativeResourceForIntegration("egldisplay")) {
+                d->mApp->SetEGLDisplay(display);
+            }
+        }
         if (d->mAsyncContext) {
             d->mApp->StartWithCustomPump(EmbedLiteApp::EMBED_THREAD, d->EmbedLoop());
         } else {

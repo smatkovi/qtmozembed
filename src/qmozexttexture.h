@@ -13,6 +13,8 @@
 #include <QSGDynamicTexture>
 #include <functional>
 
+#define GL_TEXTURE_EXTERNAL_OES_VALUE 0x8D65
+
 class QMozExtTexture : public QSGDynamicTexture
 {
     Q_OBJECT
@@ -26,17 +28,20 @@ public:
     bool hasMipmaps() const override;
 
     QRectF normalizedTextureSubRect() const;
+    // GL_TEXTURE_EXTERNAL_OES or GL_TEXTURE_2D, as the last image needed
+    unsigned target() const;
 
     void bind() override;
     bool updateTexture() override;
 
 Q_SIGNALS:
-    void getPlatformImage(const std::function<void(void *image, int width, int height)> &callback);
+    void getPlatformImage(const std::function<void(void *image, int width, int height, unsigned target)> &callback);
 
 private:
     QRectF m_normalizedTextureSubRect;
     QSize m_textureSize;
     uint m_textureId = 0;
+    unsigned m_target = GL_TEXTURE_EXTERNAL_OES_VALUE;
 };
 
 #endif

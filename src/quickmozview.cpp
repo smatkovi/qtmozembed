@@ -189,6 +189,15 @@ QSGNode * QuickMozView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
             || !d->mContext->registeredWindow()
             || !d->mMozWindow;
 
+    if (qEnvironmentVariableIsSet("QMOZEMBED_DEBUG")) {
+        qDebug() << "QuickMozView::updatePaintNode composited" << mComposited
+                 << "painted" << d->mIsPainted << "initialized" << d->mViewInitialized
+                 << "compositor" << d->mHasCompositor
+                 << "window" << (d->mContext->registeredWindow() != nullptr)
+                 << "mozWindow" << (d->mMozWindow != nullptr)
+                 << "texture" << (mTexture != nullptr);
+    }
+
     if (mTexture && invalidTexture) {
         delete oldNode;
         oldNode = nullptr;

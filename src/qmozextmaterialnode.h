@@ -83,6 +83,22 @@ public:
     QSGMaterialType *type() const;
 };
 
+// The same for an image bound as GL_TEXTURE_2D (one made from a GL texture,
+// as on Mesa) instead of GL_TEXTURE_EXTERNAL_OES.
+class MozOpaque2DTextureMaterial : public MozOpaqueExtTextureMaterial
+{
+public:
+    QSGMaterialShader *createShader() const;
+    QSGMaterialType *type() const;
+};
+
+class Moz2DTextureMaterial : public MozExtTextureMaterial
+{
+public:
+    QSGMaterialShader *createShader() const;
+    QSGMaterialType *type() const;
+};
+
 class MozExtMaterialNode : public MozMaterialNode
 {
 public:
@@ -90,10 +106,14 @@ public:
     ~MozExtMaterialNode();
 
     void setTexture(QSGTexture *texture) override;
+    void preprocess() override;
 
 private:
     MozOpaqueExtTextureMaterial m_opaqueMaterial;
     MozExtTextureMaterial m_material;
+    MozOpaque2DTextureMaterial m_opaque2DMaterial;
+    Moz2DTextureMaterial m_2DMaterial;
+    bool m_is2D = false;
 };
 
 #endif

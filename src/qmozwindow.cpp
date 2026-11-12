@@ -87,12 +87,18 @@ Qt::ScreenOrientation QMozWindow::primaryOrientation() const
     return d->mPrimaryOrientation;
 }
 
-void QMozWindow::getPlatformImage(const std::function<void(void *image, int width, int height)> &callback)
+void QMozWindow::getPlatformImage(const std::function<void(void *image, int width, int height, unsigned target)> &callback)
 {
     // ESR 153 EmbedLite only offers the synchronous descriptor form; the handle is
     // borrowed for the duration of the callback, so the consumer must import it there.
+    // The target is the GL texture target Gecko made the image for, GL_TEXTURE_2D
+    // for an image of a GL texture (Mesa), GL_TEXTURE_EXTERNAL_OES otherwise.
     d->mWindow->WithPlatformImage([&callback](const mozilla::embedlite::PlatformImageDescriptor &desc) {
-        callback(desc.handle, desc.width, desc.height);
+        const unsigned target =
+            desc.textureTarget == mozilla::embedlite::PlatformImageTextureTarget::Texture2D
+                ? 0x0DE1  /* GL_TEXTURE_2D */
+                : 0x8D65; /* GL_TEXTURE_EXTERNAL_OES */
+        callback(desc.handle, desc.width, desc.height, target);
     });
 }
 
