@@ -195,7 +195,10 @@ QSGNode * QuickMozView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
                  << "compositor" << d->mHasCompositor
                  << "window" << (d->mContext->registeredWindow() != nullptr)
                  << "mozWindow" << (d->mMozWindow != nullptr)
-                 << "texture" << (mTexture != nullptr);
+                 << "texture" << (mTexture != nullptr)
+                 << "rect" << QRectF(d->renderingOffset(), d->mSize)
+                 << "scroll" << d->mScrollableOffset << "topMargin" << d->mTopMargin
+                 << "item" << position() << size();
     }
 
     if (mTexture && invalidTexture) {

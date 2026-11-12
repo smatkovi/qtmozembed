@@ -367,6 +367,13 @@ void QMozEngineSettingsPrivate::onObserve(const QString &topic, const QVariant &
                 }
             } else if (changedPreference == PREF_PIXEL_RATIO) {
                 qreal ratio = preferenceValue.toReal();
+                // layout.css.devPixelsPerPx is -1 unless set (Gecko then uses
+                // the widget's scale, 1 in EmbedLite). Taken as is, scroll
+                // offsets turned negative and renderingOffset() moved the view
+                // down by as much as the page had scrolled.
+                if (ratio <= 0.0) {
+                    ratio = 1.0;
+                }
                 if (mPixelRatio != ratio) {
                     mPixelRatio = ratio;
                     Q_EMIT pixelRatioChanged();
