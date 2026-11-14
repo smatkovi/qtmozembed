@@ -34,6 +34,9 @@ class QuickMozView : public QQuickItem
     Q_PROPERTY(Qt::ScreenOrientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged RESET resetOrientation FINAL)
     Q_PROPERTY(qreal viewportWidth READ viewportWidth WRITE setViewportWidth NOTIFY viewportWidthChanged RESET resetViewportWidth)
     Q_PROPERTY(qreal viewportHeight READ viewportHeight WRITE setViewportHeight NOTIFY viewportHeightChanged RESET resetViewportHeight)
+    // X11 window Gecko draws into directly (the item then draws nothing);
+    // set before the view is created
+    Q_PROPERTY(qulonglong nativeWindow READ nativeWindow WRITE setNativeWindow NOTIFY nativeWindowChanged)
 
     Q_MOZ_VIEW_PROPERTIES
 
@@ -66,6 +69,9 @@ public:
     void setViewportHeight(qreal height);
     void resetViewportHeight();
 
+    qulonglong nativeWindow() const;
+    void setNativeWindow(qulonglong window);
+
 private:
     void updateGLContextInfo();
 
@@ -82,6 +88,7 @@ Q_SIGNALS:
     void orientationChanged();
     void viewportWidthChanged();
     void viewportHeightChanged();
+    void nativeWindowChanged();
 
     Q_MOZ_VIEW_SIGNALS
 
@@ -133,6 +140,7 @@ private:
     bool mExplicitOrientation;
     bool mComposited;
     bool mFollowItemGeometry;
+    qulonglong mNativeWindow = 0;
 };
 
 #endif // QuickMozView_H

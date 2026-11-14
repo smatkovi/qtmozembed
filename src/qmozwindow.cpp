@@ -31,11 +31,22 @@ QMozWindow::~QMozWindow()
     Q_ASSERT(!d->mReserved);
 }
 
+void QMozWindow::setNativeWindow(quintptr window)
+{
+    d->mNativeWindow = window;
+    if (d->mWindow) {
+        d->mWindow->SetNativeWindow(window);
+    }
+}
+
 void QMozWindow::reserve()
 {
     if (!d->mWindow) {
         d->mWindow = QMozContext::instance()->GetApp()->CreateWindow(d->mSize.width(), d->mSize.height(), d.data());
         d->mReserved = true;
+        if (d->mNativeWindow) {
+            d->mWindow->SetNativeWindow(d->mNativeWindow);
+        }
     }
 }
 

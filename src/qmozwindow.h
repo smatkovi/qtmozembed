@@ -28,6 +28,9 @@ public:
     void release();
     bool isReserved() const;
     void setSize(const QSize &size);
+    // An X11 window Gecko draws the content into directly, set before the
+    // view's first paint; 0 (default) keeps the platform image.
+    void setNativeWindow(quintptr window);
     QSize size() const;
     void setContentOrientation(Qt::ScreenOrientation);
     void setPrimaryOrientation(Qt::ScreenOrientation);

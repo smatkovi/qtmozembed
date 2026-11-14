@@ -173,6 +173,13 @@ void QuickMozView::geometryChanged(const QRectF &newGeometry, const QRectF &oldG
 
 QSGNode * QuickMozView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
+    if (mNativeWindow) {
+        delete oldNode;
+        delete mTexture;
+        mTexture = nullptr;
+        return nullptr;
+    }
+
     // If the dimensions are entirely invalid return no node.
     if (width() <= 0 || height() <= 0) {
         delete oldNode;
@@ -336,8 +343,27 @@ void QuickMozView::updateContentSize(const QSizeF &size)
     }
 }
 
+qulonglong QuickMozView::nativeWindow() const
+{
+    return mNativeWindow;
+}
+
+void QuickMozView::setNativeWindow(qulonglong window)
+{
+    if (mNativeWindow == window) {
+        return;
+    }
+    mNativeWindow = window;
+    Q_EMIT nativeWindowChanged();
+    update();
+}
+
 void QuickMozView::compositingFinished()
 {
+    if (mNativeWindow) {
+        mComposited = true;
+        return;
+    }
     if (d->mActive) {
         mComposited = true;
         update();
@@ -353,6 +379,7 @@ void QuickMozView::prepareMozWindow()
     QMozWindow *mozWindow = d->mContext->registeredWindow();
     if (!mozWindow) {
         mozWindow = new QMozWindow(webContentWindowSize(mOrientation, d->mSize).toSize());
+        mozWindow->setNativeWindow(mNativeWindow);
         mozWindow->reserve();
         d->mContext->registerWindow(mozWindow);
     } else if (d->mDirtyState & QMozViewPrivate::DirtySize && d->mActive) {
